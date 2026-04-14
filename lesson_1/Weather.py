@@ -1,18 +1,21 @@
 import requests
 
 
-def main(locations: list) -> list:
-    forecast_data = []
+def main():
+    locations = ["london", "svo", "Череповец"]
+    params = {
+        'M': '',
+        'T': '',
+        'n': '',
+        'q': '',
+        'lang': 'ru',
+    }
     for location in locations:
-        url = f'https://wttr.in/{location}?MTnq&lang=ru'
-        response = requests.get(url)
+        url = f'https://wttr.in/{location}'
+        response = requests.get(url, params=params)
         response.raise_for_status()
-        forecast_data.append(response.text)
-    return forecast_data
+        print(response.text)
 
 
 if __name__ == '__main__':
-    locations = ["london", "svo", "Череповец"]
-    forecast_data = main(locations)
-    for location in forecast_data:
-        print(location)
+    main()
