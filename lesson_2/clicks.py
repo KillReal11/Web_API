@@ -1,5 +1,4 @@
 import requests
-import json
 from dotenv import load_dotenv
 import os
 
@@ -26,51 +25,55 @@ def shorten_link(token, long_url):
 
 
 def count_clicks(token, long_url):
-    url = 'https://clc.li/api/urls?limit=2&page=1&order=date'
+    url = 'https://clc.li/api/urls'
     headers = {
         'Authorization': token,
         'Content-Type': 'application/json'
     }
     params = {
+        'limit': '2',
+        'page': '1',
+        'order': 'date',
         'q': long_url
     }
     response = requests.get(url, headers=headers, params=params)
     response.raise_for_status()
     answer = response.json()
-    data = answer.get('data')
-    urls = data.get('urls')
+    response_data = answer.get('data')
+    urls = response_data.get('urls')
     for link in urls:
-        if link.get('longurl') == long_url:
-            overall_clicks = link.get('clicks')
-            unique_clicks = link.get('uniqueclicks')
-            return overall_clicks, unique_clicks
-        else:
+        if link.get('longurl') != long_url:
             return None
+        overall_clicks = link.get('clicks')
+        unique_clicks = link.get('uniqueclicks')
+        return overall_clicks, unique_clicks
 
 
 def is_bitlink(token, long_url):
-    url = 'https://clc.li/api/urls?limit=2&page=1&order=date'
+    url = 'https://clc.li/api/urls'
     headers = {
         'Authorization': token,
         'Content-Type': 'application/json'
     }
     params = {
+        'limit': '2',
+        'page': '1',
+        'order': 'date',
         'q': long_url
     }
     response = requests.get(url, headers=headers, params=params)
     response.raise_for_status()
     answer = response.json()
-    data = answer.get('data')
-    urls = data.get('urls')
-    if urls:
+    response_data = answer.get('data')
+    urls = response_data.get('urls')
+    if urls[0].get('longurl') == long_url:
         return True
-    else:
-        return False
+    return False
 
 
 def main():
     load_dotenv()
-    token = os.getenv('token')
+    token = os.getenv('CLC_API_TOKEN')
     long_url = input('Введите ссылку, которую хотите сократить:')
     if is_bitlink(token, long_url):
         clicks_number = count_clicks(token, long_url=long_url)
