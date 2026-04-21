@@ -1,6 +1,7 @@
 import requests
 from dotenv import load_dotenv
 import os
+import json
 
 
 def shorten_link(token, long_url):
@@ -19,8 +20,7 @@ def shorten_link(token, long_url):
     error = answer.get('error')
     if error == 1:
         return None
-    else:
-        short_url_full = answer.get('shorturl')
+    short_url_full = answer.get('shorturl')
     return short_url_full
 
 
@@ -39,8 +39,9 @@ def count_clicks(token, long_url):
     response = requests.get(url, headers=headers, params=params)
     response.raise_for_status()
     answer = response.json()
-    response_data = answer.get('data')
-    urls = response_data.get('urls')
+    print(json.dumps(answer, indent=4, ensure_ascii=False))
+    main_part = answer.get('data')
+    urls = main_part.get('urls')
     for link in urls:
         if link.get('longurl') != long_url:
             return None
@@ -66,14 +67,12 @@ def is_bitlink(token, long_url):
     answer = response.json()
     response_data = answer.get('data')
     urls = response_data.get('urls')
-    if urls[0].get('longurl') == long_url:
-        return True
-    return False
+    return urls[0].get('longurl') == long_url
 
 
 def main():
     load_dotenv()
-    token = os.getenv('CLC_API_TOKEN')
+    token = os.environ['CLC_API_TOKEN']
     long_url = input('Введите ссылку, которую хотите сократить:')
     if is_bitlink(token, long_url):
         clicks_number = count_clicks(token, long_url=long_url)
