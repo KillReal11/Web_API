@@ -16,8 +16,8 @@ pip install -r requirements.txt
 ```
 ### Пример запуска 
 
-Запуск осуществляется командой в терминале `python clicks.py`:
-<img width="854" height="48" alt="Example_clc" src="https://github.com/user-attachments/assets/135641f0-f8dc-4aaf-8a1b-c1a4fa713ea9" />
+Запуск осуществляется в терминале командой `python clicks.py` с аргументом в виде ссылки для сокращения:
+<img width="1225" height="104" alt="Example_clc" src="https://github.com/user-attachments/assets/5a8e9ec5-e6ad-4e65-8e73-67fe076336e3" />
 
 ### Цель проекта
 
