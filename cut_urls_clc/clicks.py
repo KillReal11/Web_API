@@ -73,7 +73,9 @@ def is_bitlink(token, long_url):
     answer = response.json()
     response_data = answer.get('data')
     urls = response_data.get('urls')
-    return urls[0].get('longurl') == long_url
+    if urls:
+        return urls[0].get('longurl') == long_url
+    return False
 
 
 def main():
